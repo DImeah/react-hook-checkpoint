@@ -6,8 +6,13 @@ import { Rate } from "antd";
 import validator from "validator";
 
 export const AddMovie = ({ setMyMovies, setRandom, memorizedMovies }) => {
+  // Message API and context holder for displaying messages
   const [messageApi, contextHolder] = message.useMessage();
+
+  // State for controlling the modal
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // State for storing movie information
   const [movieInfo, setMovieInfo] = useState({
     ID: Math.random(),
     title: "",
@@ -16,7 +21,7 @@ export const AddMovie = ({ setMyMovies, setRandom, memorizedMovies }) => {
     rating: "",
   });
 
-  // function to handle input
+  // Function to handle input changes
   const handleInput = (e) => {
     const { id, value } = e.target;
     setMovieInfo((preValue) => {
@@ -24,55 +29,56 @@ export const AddMovie = ({ setMyMovies, setRandom, memorizedMovies }) => {
     });
   };
 
+  // Function to show the modal
   const showModal = () => {
     setIsModalOpen(true);
   };
 
-  // handle the okay button
+  // Function to handle the okay button click
   const handleOk = () => {
     // Validation of all inputs
-
     if (!validator.isURL(movieInfo.posterURL)) {
       messageApi.open({
         type: "error",
-        content: "This provide a valid Image Adress",
+        content: "Please provide a valid Image Address",
       });
       return;
     }
     if (validator.isEmpty(movieInfo.title)) {
       messageApi.open({
         type: "error",
-        content: "Pls provide a movie title",
+        content: "Please provide a movie title",
       });
       return;
     }
     if (validator.isEmpty(movieInfo.description)) {
       messageApi.open({
         type: "error",
-        content: "Pls Provide a discription",
+        content: "Please provide a description",
       });
       return;
     }
     if (movieInfo.rating < 1) {
       messageApi.open({
         type: "error",
-        content: "Pls rate the Movie",
+        content: "Please rate the Movie",
       });
       return;
     }
 
+    // Display success message
     messageApi.open({
       type: "success",
       content: "Added movie successfully",
     });
 
+    // Update movie list
     setMyMovies(() => [movieInfo, ...memorizedMovies.myMemorizedMovies]);
 
-    // to trigger the memorized the value in the use memo in app.jsx
+    // Trigger re-render by changing a random value
     setRandom(Math.random());
-    // ***************************
-    // ***************************
 
+    // Reset movieInfo and close the modal
     setMovieInfo({
       ID: Math.random(),
       title: "",
@@ -83,7 +89,9 @@ export const AddMovie = ({ setMyMovies, setRandom, memorizedMovies }) => {
     setIsModalOpen(false);
   };
 
+  // Function to handle the cancel button click
   const handleCancel = () => {
+    // Reset movieInfo and close the modal
     setMovieInfo({
       ID: Math.random(),
       title: "",
@@ -96,6 +104,7 @@ export const AddMovie = ({ setMyMovies, setRandom, memorizedMovies }) => {
 
   return (
     <>
+      {/* Button to open the modal */}
       <Button
         type="primary"
         icon={<VideoCameraAddOutlined />}
@@ -104,13 +113,16 @@ export const AddMovie = ({ setMyMovies, setRandom, memorizedMovies }) => {
       >
         Add new Movie
       </Button>
+
+      {/* Modal for adding a new movie */}
       <Modal
-        title="Basic Modal"
-        open={isModalOpen}
+        title="Add New Movie"
+        visible={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
       >
         {contextHolder}
+        {/* Input for movie title */}
         <Input
           rows={4}
           id="title"
@@ -118,6 +130,8 @@ export const AddMovie = ({ setMyMovies, setRandom, memorizedMovies }) => {
           value={movieInfo.title}
         />
         <br />
+
+        {/* Textarea for movie description */}
         <Input.TextArea
           rows={4}
           id="description"
@@ -125,6 +139,8 @@ export const AddMovie = ({ setMyMovies, setRandom, memorizedMovies }) => {
           value={movieInfo.description}
         />
         <br />
+
+        {/* Input for movie poster URL */}
         <Input
           rows={4}
           label="ImageUrl"
@@ -133,6 +149,8 @@ export const AddMovie = ({ setMyMovies, setRandom, memorizedMovies }) => {
           value={movieInfo.posterURL}
         />
         <br />
+
+        {/* Rating input for movie rating */}
         <Rate
           value={movieInfo.rating}
           onChange={(value) => {

@@ -7,25 +7,30 @@ export const Filter = ({
   memorizedMovies: { myMemorizedMovies },
   setMyMovies,
 }) => {
-  // filter movies by rate
+  // Function to filter movies by rate
   const filterByRate = (rate) => {
-    let filterdMovies = myMemorizedMovies.filter(
+    // Filter movies based on the selected rating
+    let filteredMovies = myMemorizedMovies.filter(
       (item) => item.rating === Number(rate)
     );
-    setMyMovies(filterdMovies);
-  };
-
-  // filter movies by Search
-  const filterBySearch = (value) => {
-    let filteredMovies = myMemorizedMovies.filter((item) =>
-      item.title.toLocaleLowerCase().includes(value.toLowerCase().trim())
-    );
+    // Update the state with the filtered movies
     setMyMovies(filteredMovies);
   };
 
-  // what its returning to the screen
+  // Function to filter movies by search
+  const filterBySearch = (value) => {
+    // Filter movies based on the search value in the title
+    let filteredMovies = myMemorizedMovies.filter((item) =>
+      item.title.toLowerCase().includes(value.toLowerCase().trim())
+    );
+    // Update the state with the filtered movies
+    setMyMovies(filteredMovies);
+  };
+
+  // Rendered content on the screen
   return (
     <div className="flex flex-col md:flex-row gap-5 items-center">
+      {/* Search input for movie title */}
       <Search
         placeholder="Search for movie"
         allowClear
@@ -33,6 +38,8 @@ export const Filter = ({
         className="bg-custGreen"
         onSearch={(value) => filterBySearch(value)}
       />
+
+      {/* Dropdown for selecting movie ratings */}
       <Select
         defaultValue="Ratings"
         style={{ width: 200 }}
